@@ -1,0 +1,72 @@
+.email-container {
+ width: 100%;
+
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  .create-ticket-btn{
+    background: var(--background-color);
+    color: white;
+    width: fit-content;
+    border-radius: var(--default-border-radius);
+    cursor: pointer;
+    padding: 10px;
+  }
+  .action-area-for-model{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .ticketdata{
+    max-height: 300px;
+    overflow-y: scroll;
+    margin: 20px 0px;
+    padding: 10px;
+    border: 1px solid black;
+  }
+  .create-ticket-btn:hover{
+background-color: var(--shadow-low3);
+  }
+  .email-header {
+    background: var(--background-color);
+    color: white;
+    padding: 15px;
+    border-radius: var(--default-border-radius) var(--default-border-radius) 0 0;
+    text-align: center;
+  }
+  
+  .email-header h2 {
+    margin: 0;
+  }
+  
+  .email-date {
+    font-size: 12px;
+    opacity: 0.8;
+  }
+  
+  .email-body {
+    padding: 15px;
+  }
+  
+  .email-body p {
+    margin: 10px 0;
+  }
+  .pretag{
+    font-family: Arial, sans-serif;
+    white-space: pre-wrap;
+  }
+  
+  .email-body a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .email-footer {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+  }
+  

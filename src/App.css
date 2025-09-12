@@ -1,0 +1,203 @@
+:root {
+  --background-color: #E85319;
+  --headings-color: var(--background-color);
+  --shadow-low1: #e73a004a;
+  --shadow-low2: #006bcf00;
+  --shadow-low3: #feaa91;
+  --default-box-shadow: 0 0 4px var(--background-color);
+  --left-space: 5%;
+  --mid-space: 90%;
+  --right-space: 5%;
+  --default-border: 1px solid var(--headings-color);
+  --text-color: white;
+  --font-family-base: var(--font-montserrat);
+  --default-p-size: 16px;
+  --default-p-size2: 14px;
+  --default-border-radius: 6px;
+  --warning-color: rgb(255, 38, 0);
+   --warning-bgcolor: rgba(255, 38, 0, 0.426);
+  --success-color: rgb(0, 101, 0);
+  --success-bgcolor:rgba(2, 216, 2, 0.512);
+}
+
+body {
+  font-family: "Nunito", sans-serif;
+  padding: 0%;
+  margin: 0%;
+  scrollbar-width: none;
+}
+.App {
+  display: flex;
+  height: 100vh;
+}
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  padding: 0%;
+  margin: 0%;
+}
+
+.home-digitalaura-logo {
+  width: 80%;
+  margin-top: 20px;
+}
+
+.userprofile {
+  height: 90px;
+  width: 100%;
+  display: flex;
+
+  align-items: center;
+}
+.userprofile .avatar {
+  height: 50px;
+  width: 50px;
+  margin-left: 10px;
+  border-radius: 50%;
+}
+.userprofile .avatar-data {
+  margin-left: 10px;
+}
+.userprofile .avatar-data p {
+  font-size: 12px;
+}
+
+.app-side-bar {
+  width: 15%;
+  height: 100vh;
+
+  gap: 30px;
+  border-right: 1px solid rgb(217, 217, 217);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.app-right {
+  width: 81%;
+  height: calc(100vh - 60px);
+  padding: 30px;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+.Dashboard,
+.admin-body {
+  height: 96vh;
+  padding: 2vh 3%;
+  overflow-y: scroll;
+}
+
+.mini-search-section {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgb(217, 217, 217);
+  border-radius: 6px;
+  width: 20%;
+  background-color: #f3f4f6;
+  height: 4.5vh;
+  padding: 0%;
+  margin-bottom: 2vh;
+}
+.mini-search-section input {
+  background-color: #f3f4f6;
+  outline: none;
+  border-style: none;
+  font-size: 14px;
+  width: 91%;
+}
+
+.Content-area {
+  display: flex;
+}
+/* .left-area{
+width: 25%;
+height: 90vh;
+
+background:
+linear-gradient(to top , #7823ff, transparent),
+linear-gradient(to bottom left,#21b9fa , transparent),
+linear-gradient(to bottom right, #ffffff, transparent);
+background-blend-mode: screen;
+overflow-y: scroll;
+scrollbar-width: none;
+
+} */
+
+.app-side-bar ul {
+  list-style: none;
+  margin: 0%;
+  padding: 0%;
+  width: 90%;
+}
+.unselected {
+  padding: 10px;
+  color: black;
+}
+.selected-item {
+  background: var(--background-color);
+  color: var(--text-color);
+  border-radius: 4px;
+  padding: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.unselected:hover {
+  cursor: pointer;
+  background-color: #f4f4f4;
+  color: rgb(74, 74, 74);
+  border-radius: 4px;
+}
+.Alert-message-area {
+  width: 100%;
+  position: fixed;
+  left: 0;
+  bottom: 50px;
+  display: flex;
+  justify-content: center;
+  animation: slideIn 0.5s ease-in; /* Animation for sliding in */
+}
+.Alert-message-area.hidden {
+  animation: slideOut 0.5s ease-out;
+}
+/* Slide-in animation */
+@keyframes slideIn {
+  0% {
+    bottom: -100px; /* Starts from below the screen */
+    opacity: 0;
+    visibility: visible; /* Make the element visible at the start */
+  }
+  100% {
+    bottom: 50px; /* Ends at the defined position */
+    opacity: 1;
+  }
+}
+@keyframes slideOut {
+  0% {
+    bottom: 50px; /* Starts from below the screen */
+  }
+  100% {
+    bottom: -20px; /* Ends at the defined position */
+  }
+}
+
+@media screen and (max-width: 820px) {
+  .app-side-bar {
+    width: 10%;
+    height: 100vh;
+    border-right: 1px solid rgb(217, 217, 217);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .app-right {
+    width: 90%;
+    height: 100vh;
+    padding: 0vh 0px;
+    overflow-y: scroll;
+    scrollbar-width: none;
+  }
+}
