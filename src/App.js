@@ -24,6 +24,8 @@ import UserType from "./Pages/Users/UserType";
 import Users from "./Pages/Users/Users";
 
 import FeaturedBlogs from "./Pages/FeaturedBlogs/FeaturedBlogs";
+import AddServices from "./Pages/Services/AddServices";
+import Services from "./Pages/Services/Services";
 const App = ({ onLogout, message, userType }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -41,6 +43,7 @@ const App = ({ onLogout, message, userType }) => {
     { id: 8, name: "Testimonials", route: "/testimonials" },
     { id: 9, name: "Users", route: "/users" },
     { id: 10, name: "UsersType", route: "/usertype" },
+    { id: 12, name: "Services", route: "/services" },
  
   ];
 
@@ -132,6 +135,9 @@ const App = ({ onLogout, message, userType }) => {
               />
               <Route path="/usertype" element={<UserType />} />
               <Route path="/users" element={<Users />} />
+                <Route path="/services" element={<Services />} />
+              <Route path="/add-service" element={<AddServices />} />
+              <Route path="/edit-service/:id" element={<AddServices />} />
             </>
           )}
 
