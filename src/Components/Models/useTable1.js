@@ -17,17 +17,18 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import { formatDate } from "../../Utils/Formatedate";
 import truncateText from "../../truncateText";
-import {  deleteAllOfferings } from "../../DAL/delete";
+import {  deleteAllFaqs } from "../../DAL/delete";
 import { useAlert } from "../Alert/AlertContext";
 import DeleteModal from "./confirmDeleteModel";
 import KeyOfferings from "./keyOfferingsModel";
 import { useParams } from "react-router-dom";
+import FaqsModel from "./faqsModel";
 
-export function useTable1({ attributes1, tableType, data  }) {
+export function useTable1({ attributes1, tableType, data = []  }) {
   const { showAlert } = useAlert(); // Since you created a custom hook
 
   const [selected, setSelected] = useState([]);
-  const [openCategoryModal, setOpenCategoryModal] = useState(false);
+  const [openFaqsModel, setOpenFaqsModel] = useState(false);
   const [modeltype, setModeltype] = useState("Add");
   const [modelData, setModelData] = useState({});
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -46,7 +47,7 @@ export function useTable1({ attributes1, tableType, data  }) {
   const handleViewClick = (category) => {
     setModelData(category);
     setModeltype("Update");
-    setOpenCategoryModal(true);
+    setOpenFaqsModel(true);
   };
 
   const handleDelete = async () => {
@@ -58,7 +59,7 @@ export function useTable1({ attributes1, tableType, data  }) {
     console.log("Attempting to delete IDs:", selected);
 
     try {
-      let response = await deleteAllOfferings({ ids: selected });
+      let response = await deleteAllFaqs({ ids: selected });
 
       if (response.status === 200) {
         showAlert("success", response.message || "Deleted successfully");
@@ -73,7 +74,7 @@ export function useTable1({ attributes1, tableType, data  }) {
   };
 
   const handleAddButton = () => {
-    setOpenCategoryModal(true);
+    setOpenFaqsModel(true);
     setModeltype("Add");
     setModelData();
   };
@@ -98,9 +99,9 @@ export function useTable1({ attributes1, tableType, data  }) {
   return {
     tableUI1: (
       <>
-        <KeyOfferings
-          open={openCategoryModal}
-          setOpen={setOpenCategoryModal}
+        <FaqsModel
+          open={openFaqsModel}
+          setOpen={setOpenFaqsModel}
           Modeltype={modeltype}
           Modeldata={modelData}
           onResponse={handleResponse}
@@ -113,11 +114,11 @@ export function useTable1({ attributes1, tableType, data  }) {
           onConfirm={handleDelete}
         />
 
-        <Box sx={{ width: "100%" }}>
+        <Box sx={{ width: "100%", marginBottom:"50px" }}>
           <Paper sx={{ width: "100%", maxHeight: "95vh", boxShadow: "none" }}>
-            <Toolbar sx={{ display: "flex", justifyContent: "space-between" , marginTop:"50px" }}>
+            <Toolbar sx={{ display: "flex", justifyContent: "space-between"  }}>
               <Typography
-                variant="h3"
+                variant="h5"
                 sx={{ color: "var(--background-color)" }}
               >
                 {tableType} List
@@ -177,7 +178,7 @@ export function useTable1({ attributes1, tableType, data  }) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {data.map((row) => {
+                  {data?.map((row) => {
                     const isItemSelected = isSelected(row._id);
                     return (
                       <TableRow key={row._id} selected={isItemSelected}>

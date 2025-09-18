@@ -152,7 +152,7 @@ const AddBlog = () => {
         ? await updateBlog(id, formData)
         : await createBlog(formData);
 
-      if (response.status === 200 || response.status === 201) {
+      if (response.status == 200 || response.status == 201) {
         showAlert("success", response.message);
         navigate("/blogs");
       } else if (response.missingFields) {

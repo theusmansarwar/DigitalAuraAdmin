@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   Box,
   Paper,
@@ -17,13 +17,13 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import { formatDate } from "../../Utils/Formatedate";
 import truncateText from "../../truncateText";
-import { deleteAllBlogs, deleteAllSuccessStories } from "../../DAL/delete";
+import {  deleteAllOfferings } from "../../DAL/delete";
 import { useAlert } from "../Alert/AlertContext";
 import DeleteModal from "./confirmDeleteModel";
-import SuccessStories from "./SuccessStoriesModel";
+import KeyOfferings from "./keyOfferingsModel";
 import { useParams } from "react-router-dom";
 
-export function useTable2({ attributes2, tableType, data }) {
+export function useTable2({ attributes1, tableType, data  }) {
   const { showAlert } = useAlert(); // Since you created a custom hook
 
   const [selected, setSelected] = useState([]);
@@ -33,7 +33,9 @@ export function useTable2({ attributes2, tableType, data }) {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const {id} = useParams()
- 
+
+
+
 
   const handleSelectAllClick = (event) => {
     setSelected(event.target.checked ? data.map((row) => row._id) : []);
@@ -56,7 +58,7 @@ export function useTable2({ attributes2, tableType, data }) {
     console.log("Attempting to delete IDs:", selected);
 
     try {
-      let response = await deleteAllSuccessStories({ ids: selected });
+      let response = await deleteAllOfferings({ ids: selected });
 
       if (response.status === 200) {
         showAlert("success", response.message || "Deleted successfully");
@@ -91,11 +93,12 @@ export function useTable2({ attributes2, tableType, data }) {
   const handleDeleteClick = () => {
     setOpenDeleteModal(true);
   };
+  
 
   return {
     tableUI2: (
       <>
-        <SuccessStories
+        <KeyOfferings
           open={openCategoryModal}
           setOpen={setOpenCategoryModal}
           Modeltype={modeltype}
@@ -112,7 +115,7 @@ export function useTable2({ attributes2, tableType, data }) {
 
         <Box sx={{ width: "100%" }}>
           <Paper sx={{ width: "100%", maxHeight: "95vh", boxShadow: "none" }}>
-            <Toolbar sx={{ display: "flex", justifyContent: "space-between", marginTop:"50px" }}>
+            <Toolbar sx={{ display: "flex", justifyContent: "space-between" , marginTop:"50px" }}>
               <Typography
                 variant="h3"
                 sx={{ color: "var(--background-color)" }}
@@ -160,7 +163,7 @@ export function useTable2({ attributes2, tableType, data }) {
                         onChange={handleSelectAllClick}
                       />
                     </TableCell>
-                    {attributes2.map((attr) => (
+                    {attributes1.map((attr) => (
                       <TableCell
                         key={attr._id}
                         sx={{ color: "var(--background-color)" }}
@@ -197,7 +200,7 @@ export function useTable2({ attributes2, tableType, data }) {
                           />
                         </TableCell>
 
-                        {attributes2.map((attr) => (
+                        {attributes1.map((attr) => (
                           <TableCell
                             key={attr.id}
                             sx={{ color: "var(--black-color)" }}
