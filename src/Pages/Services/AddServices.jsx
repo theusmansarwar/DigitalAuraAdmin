@@ -90,7 +90,7 @@ const AddServices = () => {
           // ✅ Load existing image
           if (service.how_we_delivered?.image) {
             setImagePreview(
-              `http://localhost:5000${service.how_we_delivered.image}`
+              baseUrl +service.how_we_delivered.image
             );
             setHowWeDelivered(service.how_we_delivered);
             setUploadSuccess(true);
@@ -103,7 +103,7 @@ const AddServices = () => {
           }
 
           if (service?.icon) {
-            setIconPreview(`http://localhost:5000${service.icon}`);
+            setIconPreview(baseUrl + service.icon);
           }
           setVideo(
             service.video || { description: "", url: "", published: false }
