@@ -20,7 +20,6 @@ import truncateText from "../../truncateText";
 import {  deleteAllFaqs } from "../../DAL/delete";
 import { useAlert } from "../Alert/AlertContext";
 import DeleteModal from "./confirmDeleteModel";
-import KeyOfferings from "./keyOfferingsModel";
 import { useParams } from "react-router-dom";
 import FaqsModel from "./faqsModel";
 

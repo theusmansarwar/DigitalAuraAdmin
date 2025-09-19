@@ -134,9 +134,9 @@ export const deleteOfferingById = async (id,data) => {
   
   return invokeApi(reqObj);
 };
-export const deleteAllOfferings = async (data) => {
+export const deleteAllPortfolio = async (data) => {
   const reqObj = {
-    path: `/offering/delete-many`,
+    path: `/portfolio/delete-many`,
     method: "DELETE", // Ensure correct capitalization
     headers: {
       "Content-Type": "application/json",

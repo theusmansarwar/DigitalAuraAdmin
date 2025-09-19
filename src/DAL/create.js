@@ -86,9 +86,9 @@ export const createNewService = async (data) => {
   };
   return invokeApi(reqObj);
 };
-export const createNewOffering = async (data) => {
+export const createNewPortfolio = async (data) => {
   const reqObj = {
-    path: "/offering/add",
+    path: "/portfolio/add",
     method: "POST",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("Token")}`,

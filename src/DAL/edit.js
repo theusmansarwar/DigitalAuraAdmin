@@ -79,9 +79,9 @@ export const updateService = async (id, data) => {
   };
   return invokeApi(reqObj);
 };
-export const updateOffering = async (id, data) => {
+export const updatePortfolio = async (id, data) => {
   const reqObj = {
-    path: `/offering/update/${id}`,
+    path: `/portfolio/update/${id}`,
     method: "PUT",
     headers: { Authorization: `Bearer ${localStorage.getItem("Token")}` },
     postData: data,

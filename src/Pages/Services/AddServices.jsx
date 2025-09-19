@@ -18,6 +18,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { useTable1 } from "../../Components/Models/useTable1";
 import { baseUrl } from "../../Config/Config";
+import { useTable2 } from "../../Components/Models/useTable2";
 
 const AddServices = () => {
   const navigate = useNavigate();
@@ -39,6 +40,9 @@ const AddServices = () => {
   const [faqs, setFaqs] = useState({
     title: "",
     description: "",
+    published: false,
+  });
+  const [portfolio, setPortfolio] = useState({
     published: false,
   });
   const [howWeDelivered, setHowWeDelivered] = useState({
@@ -85,6 +89,9 @@ const AddServices = () => {
 
           setFaqs(
             service.faqs || { title: "", description: "", published: false }
+          );
+           setPortfolio(
+            service.portfolio || { title: "", description: "", published: false }
           );
 
           // ✅ Load existing image
@@ -213,6 +220,8 @@ const AddServices = () => {
         })
       );
 
+       // portfolio
+     formData.append("portfolio_published", portfolio.published);
       // If you are sending file upload
       if (howWeDelivered.file) {
         formData.append("file", howWeDelivered.file);
@@ -267,6 +276,17 @@ const AddServices = () => {
     attributes1,
     tableType: "FAQs",
     data: faqs?.items || [],
+  });
+   const attributes2 = [
+    { id: "title", label: "Title" },
+    { id: "description", label: "Description" },
+    { id: "published", label: "Visibility" },
+  ];
+
+  const { tableUI2 } = useTable2({
+    attributes2,
+    tableType: "Portfolio",
+    data: portfolio?.items || [],
   });
 
   return (
@@ -609,8 +629,25 @@ const AddServices = () => {
               }
               label={video.published ? "Published" : "Draft"}
             />
+        
+       
+
+<Typography variant="h6">Portfolios</Typography>
+      
+         <FormControlLabel
+              control={
+                <Switch
+                  checked={portfolio.published}
+                  onChange={() =>
+                    setPortfolio({ ...portfolio, published: !portfolio.published })
+                  }
+                />
+              }
+              label={faqs.published ? "Published" : "Draft"}
+            />{" "}
+              {tableUI2}
           </>
-        )}
+         )}
 
         <FormControlLabel
           control={
