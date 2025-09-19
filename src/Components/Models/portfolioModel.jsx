@@ -8,6 +8,7 @@ import {
   Switch,
   FormControlLabel,
   IconButton,
+  LinearProgress,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { createNewPortfolio } from "../../DAL/create";
@@ -72,7 +73,7 @@ const handleFileUpload = async (e, type) => {
 
   for (const file of files) {
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("image", file);
 
     const startTime = Date.now();
 
@@ -100,6 +101,7 @@ const handleFileUpload = async (e, type) => {
           setImages((prev) => [...prev, res.data.file]);
         } else if (type === "video") {
           setVideos((prev) => [...prev, res.data.file]);
+          setProgress(0);
         } else if (type === "thumbnail") {
           setThumbnail(res.data.file);
         }
@@ -238,6 +240,16 @@ const handleFileUpload = async (e, type) => {
           accept="video/*"
           onChange={(e) => handleFileUpload(e, "video")}
         />
+        {progress > 0 && (
+  <Box sx={{ mt: 1, width: "100%" }}>
+    <Typography variant="body2">Uploading: {progress}%</Typography>
+    <LinearProgress variant="determinate" value={progress} />
+    {timeLeft !== null && (
+      <Typography variant="body2">Time left: {timeLeft}s</Typography>
+    )}
+  </Box>
+)}
+
         <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mt: 1 }}>
           {videos.map((vid, idx) => (
             <Box
