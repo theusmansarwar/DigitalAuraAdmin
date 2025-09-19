@@ -643,7 +643,7 @@ const AddServices = () => {
                   }
                 />
               }
-              label={faqs.published ? "Published" : "Draft"}
+              label={portfolio.published ? "Published" : "Draft"}
             />{" "}
               {tableUI2}
           </>
