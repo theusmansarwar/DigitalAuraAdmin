@@ -14,6 +14,7 @@ import { createNewPortfolio } from "../../DAL/create";
 import { updatePortfolio } from "../../DAL/edit";
 import { uploadimage } from "../../DAL/create"; // your upload API call
 import { baseUrl } from "../../Config/Config";
+import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -36,7 +37,11 @@ export default function PortfolioModel({
   Modeldata,
   onResponse,
   serviceid,
-}) {
+}) 
+{
+
+  const [progress, setProgress] = React.useState(0);
+const [timeLeft, setTimeLeft] = React.useState(null);
   const [title, setTitle] = React.useState(Modeldata?.title || "");
   const [description, setDescription] = React.useState(
     Modeldata?.description || ""
@@ -62,25 +67,49 @@ export default function PortfolioModel({
   const handleClose = () => setOpen(false);
 
   // Upload handler
-  const handleFileUpload = async (e, type) => {
-    const files = Array.from(e.target.files);
+const handleFileUpload = async (e, type) => {
+  const files = Array.from(e.target.files);
 
-    for (const file of files) {
-      const formData = new FormData();
-      formData.append("image", file);
+  for (const file of files) {
+    const formData = new FormData();
+    formData.append("file", file);
 
-      const res = await uploadimage(formData);
-      if (res?.file) {
+    const startTime = Date.now();
+
+    try {
+      const res = await axios.post(`${baseUrl}/upload-image`, formData, {
+        headers: { "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("Token")}`,
+         },
+        onUploadProgress: (progressEvent) => {
+          const percent = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setProgress(percent);
+
+          const elapsed = (Date.now() - startTime) / 1000; // seconds
+          const uploadSpeed = progressEvent.loaded / elapsed; // bytes/sec
+          const remainingBytes = progressEvent.total - progressEvent.loaded;
+          const eta = remainingBytes / uploadSpeed; // seconds
+          setTimeLeft(Math.round(eta));
+        },
+      });
+
+      if (res.data?.file) {
         if (type === "image") {
-          setImages((prev) => [...prev, res.file]); // store relative path
+          setImages((prev) => [...prev, res.data.file]);
         } else if (type === "video") {
-          setVideos((prev) => [...prev, res.file]);
+          setVideos((prev) => [...prev, res.data.file]);
         } else if (type === "thumbnail") {
-          setThumbnail(res.file);
+          setThumbnail(res.data.file);
         }
       }
+    } catch (err) {
+      console.error("Upload failed:", err);
     }
-  };
+  }
+};
+
 
   const handleRemove = (type, index = null) => {
     if (type === "image") {
