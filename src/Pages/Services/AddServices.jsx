@@ -4,7 +4,7 @@ import { useAlert } from "../../Components/Alert/AlertContext";
 import { fetchservicebyid } from "../../DAL/fetch";
 import { createNewService, uploadimage } from "../../DAL/create";
 import { updateService } from "../../DAL/edit";
-import axios from "axios";
+import { FaCircleInfo } from "react-icons/fa6";
 
 import {
   Box,
@@ -19,11 +19,14 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 import { useTable1 } from "../../Components/Models/useTable1";
 import { baseUrl } from "../../Config/Config";
 import { useTable2 } from "../../Components/Models/useTable2";
+import InfoModal from "../../Components/Models/InfoModal";
 
 const AddServices = () => {
   const navigate = useNavigate();
   const { showAlert } = useAlert();
   const { id } = useParams();
+const [open, setOpen] = useState(false);
+
 
   // Service states
   const [title, setTitle] = useState("");
@@ -291,6 +294,18 @@ const AddServices = () => {
 
   return (
     <Box sx={{ p: 3 }}>
+
+     
+      <Button variant="filled" onClick={() => setOpen(true)} sx={{position:"fixed", display:"flex", justifySelf:"flex-end", backgroundColor:'var(--background-color)', color:"var(--text-color)", top:"20px", right:"20px", gap:"5px", zIndex:10}}>
+        Guide  <FaCircleInfo />
+      </Button>
+
+      <InfoModal
+        open={open}
+        onClose={() => setOpen(false)}
+    
+      />
+ 
       <Typography variant="h5" gutterBottom>
         {id ? "Edit Service" : "Add Service"}
       </Typography>
