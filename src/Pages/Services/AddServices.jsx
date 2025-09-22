@@ -10,6 +10,7 @@ import howwedelivered from '../../Assets/howwedelivered.png'
 import faqssectionimg from '../../Assets/Faqssection.png'
 import videosectionimg from '../../Assets/videosection.png'
 import portfoliosectionimg from '../../Assets/portfolioimg.png'
+import serviceiconimg from '../../Assets/serviceiconimg.png'
 import {
   Box,
   Button,
@@ -367,9 +368,9 @@ const openinfobox=(heading,image)=>{
           error={!!errors.short_description}
           helperText={errors.short_description}
         />
-        {/* Service Icon Upload */}
+       
         <Typography variant="h5" sx={{ color: "var(--background-color)" }}>
-          Service Icon
+          Service Icon    <BsInfoCircle style={{fontSize:'16px'}} onClick={()=>{openinfobox("Upload Service Icon", serviceiconimg) }}/>
         </Typography>
         <Box
           sx={{
@@ -421,7 +422,7 @@ const openinfobox=(heading,image)=>{
           ) : (
             <Box sx={{ textAlign: "center", color: "#888" }}>
               <FaCloudUploadAlt size={32} />
-              <Typography variant="body2">Upload Service Icon  <BsInfoCircle style={{fontSize:'16px'}} onClick={()=>{openinfobox("Portfolio Section", portfoliosectionimg) }}/></Typography>
+              <Typography variant="body2">Upload Service Icon</Typography>
             </Box>
           )}
           <input
