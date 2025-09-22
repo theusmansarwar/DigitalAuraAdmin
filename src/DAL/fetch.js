@@ -97,6 +97,18 @@ export const fetchallserviceslist = async (page, rowsPerPages,title) => {
   };
   return invokeApi(reqObj);
 };
+export const fetchallpublishedserviceslist = async () => {
+  const reqObj = {
+    path: `/service/list`,
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("Token")}`,
+    },
+
+    body: {},
+  };
+  return invokeApi(reqObj);
+};
 export const fetchservicebyid = async (id) => {
   const reqObj = {
     path: `/service/get/${id}`,

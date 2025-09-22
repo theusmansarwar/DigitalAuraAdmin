@@ -1,8 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  TextareaAutosize,
+  Switch,
+  FormControlLabel,
+  CircularProgress,
+} from "@mui/material";
 import { useAlert } from "../../Components/Alert/AlertContext";
-import {  fetchTestimonialbyid } from "../../DAL/fetch";
-import "./AddTestimonial.css";
+import { fetchallpublishedserviceslist, fetchallservicescategorylist, fetchallserviceslist, fetchTestimonialbyid } from "../../DAL/fetch";
 import { updateTestimonial } from "../../DAL/edit";
 import { createTestimonial } from "../../DAL/create";
 
@@ -18,27 +31,35 @@ const AddTestimonial = () => {
   const [rating, setRating] = useState("");
   const [description, setDescription] = useState("");
   const [published, setPublished] = useState(true);
-  const [services, setServices] = useState([]);
+  const [services, setServices] = useState([]); // dropdown values
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
-
   useEffect(() => {
+    const loadServices = async () => {
+    const res = await fetchallpublishedserviceslist();
+    setServices(res.services);
+  };
+  loadServices();
+
+
     const fetchTestimonial = async () => {
       try {
         const response = await fetchTestimonialbyid(id);
-        setName(response.name);
-        setService(response.service);
-        setRating(response.rating);
-        setDate(response.date)
-         setLocation(response.location);
-         setDescription(response.description);
-         setPublished(response.published)
+        if (response) {
+          setName(response.name || "");
+          setService(response.service || "");
+          setRating(response.rating || "");
+          setDate(response.date || "");
+          setLocation(response.location || "");
+          setDescription(response.description || "");
+          setPublished(response.published ?? true);
+        }
       } catch (error) {
-        console.error("Error fetching services:", error);
+        console.error("Error fetching testimonial:", error);
       }
     };
-    fetchTestimonial();
+    if (id) fetchTestimonial();
   }, [id]);
 
   // Handle Form Submission
@@ -94,94 +115,128 @@ const AddTestimonial = () => {
   };
 
   return (
-    <div className="AddTestimonial">
-      <form onSubmit={handleSubmit}>
-        <h3>{id ? "Edit Testimonial" : "Add Testimonial"}</h3>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        width:"100%",
+      }}
+    >
+      <Typography variant="h5" gutterBottom>
+        {id ? "Edit Testimonial" : "Add Testimonial"}
+      </Typography>
 
-        {/* Name Input */}
-        {errors.name && <p className="error">{errors.name}</p>}
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-
-        {/* Service Dropdown */}
-        {errors.service && <p className="error">{errors.service}</p>}
-        <select value={service} onChange={(e) => setService(e.target.value)}>
-          <option value="">Select a Service</option>
+      <TextField
+        fullWidth
+        label="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        error={!!errors.name}
+        helperText={errors.name}
+        margin="normal"
+      />
+      <FormControl fullWidth margin="normal" error={!!errors.service}>
+        <InputLabel>Select a Service</InputLabel>
+        <Select value={service} onChange={(e) => setService(e.target.value)}>
+          <MenuItem value="">
+            <em>Select a Service</em>
+          </MenuItem>
           {services.map((srv) => (
-            <option key={srv._id} value={srv.name}>
-              {srv.name}
-            </option>
+            <MenuItem key={srv._id} value={srv.title}>
+              {srv.title}
+            </MenuItem>
           ))}
-        </select>
+        </Select>
+        {errors.service && (
+          <Typography color="error">{errors.service}</Typography>
+        )}
+      </FormControl>
+      <TextField
+        fullWidth
+        label="Location"
+        value={location}
+        onChange={(e) => setLocation(e.target.value)}
+        error={!!errors.location}
+        helperText={errors.location}
+        margin="normal"
+      />
 
-        {/* Location Input */}
-        {errors.location && <p className="error">{errors.location}</p>}
-        <input
-          type="text"
-          placeholder="Location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-        />
+      {/* Date Picker */}
+      <TextField
+        fullWidth
+        type="date"
+        label="Date"
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
+        InputLabelProps={{ shrink: true }}
+        error={!!errors.date}
+        helperText={errors.date}
+        margin="normal"
+      />
 
-        {/* Date Picker */}
-        {errors.date && <p className="error">{errors.date}</p>}
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
-
-        {/* Rating Dropdown */}
-        {errors.rating && <p className="error">{errors.rating}</p>}
-        <select value={rating} onChange={(e) => setRating(e.target.value)}>
-          <option value="">Select Rating</option>
+      {/* Rating */}
+      <FormControl fullWidth margin="normal" error={!!errors.rating}>
+        <InputLabel>Rating</InputLabel>
+        <Select value={rating} onChange={(e) => setRating(e.target.value)}>
+          <MenuItem value="">
+            <em>Select Rating</em>
+          </MenuItem>
           {[0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((r) => (
-            <option key={r} value={r}>
+            <MenuItem key={r} value={r}>
               {r}
-            </option>
+            </MenuItem>
           ))}
-        </select>
+        </Select>
+        {errors.rating && (
+          <Typography color="error">{errors.rating}</Typography>
+        )}
+      </FormControl>
 
-        {/* Description Text Area */}
-        {errors.description && <p className="error">{errors.description}</p>}
-        <textarea
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
+      {/* Description */}
+      <TextField
+        fullWidth
+        label="Description"
+        multiline
+        minRows={3}
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        error={!!errors.description}
+        helperText={errors.description}
+        margin="normal"
+      />
 
-        {/* Published Toggle */}
-        <div className="toggle-container">
-          <span>Published: {published ? "Yes" : "No"}</span>
-          <label className="toggle-switch">
-            <input
-              type="checkbox"
-              checked={published}
-              onChange={() => setPublished(!published)}
-            />
-            <span className="slider"></span>
-          </label>
-        </div>
+      {/* Published Toggle */}
+      <FormControlLabel
+        control={
+          <Switch
+            checked={published}
+            onChange={() => setPublished(!published)}
+            color="primary"
+          />
+        }
+        label={`Published: ${published ? "Yes" : "No"}`}
+        sx={{ mt: 2 }}
+      />
 
-        {/* Submit Buttons */}
-        <div className="button-sections">
-          <button
-            type="button"
-            className="cancelbtn"
-            onClick={() => navigate("/testimonials")}
-          >
-            Cancel
-          </button>
-          <button className="published" type="submit" disabled={loading}>
-            {loading ? "Saving..." : id ? "Update" : "Save"}
-          </button>
-        </div>
-      </form>
-    </div>
+      {/* Buttons */}
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3, gap: 2 }}>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={() => navigate("/testimonials")}
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          variant="contained"
+          color="var(--background-color)"
+          disabled={loading}
+        >
+          {loading ? <CircularProgress size={24} /> : id ? "Update" : "Save"}
+        </Button>
+      </Box>
+    </Box>
   );
 };
 
