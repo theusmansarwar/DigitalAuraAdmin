@@ -25,8 +25,7 @@ const AddServices = () => {
   const navigate = useNavigate();
   const { showAlert } = useAlert();
   const { id } = useParams();
-const [open, setOpen] = useState(false);
-
+  const [open, setOpen] = useState(false);
 
   // Service states
   const [title, setTitle] = useState("");
@@ -93,15 +92,17 @@ const [open, setOpen] = useState(false);
           setFaqs(
             service.faqs || { title: "", description: "", published: false }
           );
-           setPortfolio(
-            service.portfolio || { title: "", description: "", published: false }
+          setPortfolio(
+            service.portfolio || {
+              title: "",
+              description: "",
+              published: false,
+            }
           );
 
           // ✅ Load existing image
           if (service.how_we_delivered?.image) {
-            setImagePreview(
-              baseUrl +service.how_we_delivered.image
-            );
+            setImagePreview(baseUrl + service.how_we_delivered.image);
             setHowWeDelivered(service.how_we_delivered);
             setUploadSuccess(true);
           } else {
@@ -223,8 +224,8 @@ const [open, setOpen] = useState(false);
         })
       );
 
-       // portfolio
-     formData.append("portfolio_published", portfolio.published);
+      // portfolio
+      formData.append("portfolio_published", portfolio.published);
       // If you are sending file upload
       if (howWeDelivered.file) {
         formData.append("file", howWeDelivered.file);
@@ -280,7 +281,7 @@ const [open, setOpen] = useState(false);
     tableType: "FAQs",
     data: faqs?.items || [],
   });
-   const attributes2 = [
+  const attributes2 = [
     { id: "title", label: "Title" },
     { id: "description", label: "Description" },
     { id: "published", label: "Visibility" },
@@ -294,19 +295,31 @@ const [open, setOpen] = useState(false);
 
   return (
     <Box sx={{ p: 3 }}>
-
-     
-      <Button variant="filled" onClick={() => setOpen(true)} sx={{position:"fixed", display:"flex", justifySelf:"flex-end", backgroundColor:'var(--background-color)', color:"var(--text-color)", top:"20px", right:"20px", gap:"5px", zIndex:10}}>
-        Guide  <FaCircleInfo />
+      <Button
+        variant="filled"
+        onClick={() => setOpen(true)}
+        sx={{
+          position: "fixed",
+          display: "flex",
+          justifySelf: "flex-end",
+          backgroundColor: "var(--background-color)",
+          color: "var(--text-color)",
+          top: "20px",
+          right: "20px",
+          gap: "5px",
+          zIndex: 10,
+        }}
+      >
+        Guide <FaCircleInfo />
       </Button>
 
-      <InfoModal
-        open={open}
-        onClose={() => setOpen(false)}
-    
-      />
- 
-      <Typography variant="h5" gutterBottom>
+      <InfoModal open={open} onClose={() => setOpen(false)} />
+
+      <Typography
+        variant="h4"
+        sx={{ color: "var(--background-color)" }}
+        gutterBottom
+      >
         {id ? "Edit Service" : "Add Service"}
       </Typography>
 
@@ -343,7 +356,9 @@ const [open, setOpen] = useState(false);
           helperText={errors.short_description}
         />
         {/* Service Icon Upload */}
-        <Typography variant="h6">Service Icon</Typography>
+        <Typography variant="h5" sx={{ color: "var(--background-color)" }}>
+          Service Icon
+        </Typography>
         <Box
           sx={{
             position: "relative",
@@ -399,7 +414,7 @@ const [open, setOpen] = useState(false);
           )}
           <input
             type="file"
-            accept="image/png, image/jpeg, image/webp"
+            accept="image/png, image/jpeg, image/webp, image/svg+xml"
             style={{ display: "none" }}
             ref={iconInputRef}
             onChange={handleIconChange}
@@ -410,7 +425,7 @@ const [open, setOpen] = useState(false);
           fullWidth
           label="Description"
           multiline
-          rows={3}
+          rows={6}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           error={!!errors.description}
@@ -424,245 +439,314 @@ const [open, setOpen] = useState(false);
           error={!!errors.slug}
           helperText={errors.slug}
         />
+
+        {id && (
+          <>
+            <Box
+              sx={{
+                borderRadius: "var(--default-border-radius)",
+                display: "flex",
+                flexDirection: "column",
+                gap: "20px",
+                boxShadow: "2px 0px 10px var(--shadow-low1)",
+                padding: "20px",
+                height: "fit-content",
+              }}
+            >
+              <Typography
+                variant="h5"
+                sx={{ color: "var(--background-color)" }}
+              >
+                How We Delivered Section
+              </Typography>
+              <TextField
+                fullWidth
+                label="How We Delivered Description"
+                multiline
+                rows={6}
+                value={howWeDelivered.description}
+                onChange={(e) =>
+                  setHowWeDelivered({
+                    ...howWeDelivered,
+                    description: e.target.value,
+                  })
+                }
+                error={!!errors["how_we_delivered.description"]}
+                helperText={errors["how_we_delivered.description"]}
+              />
+              {/* Upload UI */}
+              <Box
+                sx={{
+                  position: "relative",
+                  width: "500px",
+                  aspectRatio: "16/9",
+                  border: errors["how_we_delivered.image"]
+                    ? "2px solid red"
+                    : "2px dashed #ccc",
+                  borderRadius: "12px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  overflow: "hidden",
+                  mb: 2,
+                  "&:hover": { borderColor: "primary.main" },
+                }}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                {imagePreview ? (
+                  <>
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                    {uploading && (
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          bottom: 0,
+                          left: 0,
+                          height: "6px",
+                          width: `${uploadProgress}%`,
+                          background: "green",
+                        }}
+                      />
+                    )}
+                    {uploadSuccess && (
+                      <Typography
+                        sx={{
+                          position: "absolute",
+                          top: "8px",
+                          right: "8px",
+                          background: "white",
+                          color: "green",
+                          borderRadius: "50%",
+                          padding: "4px 8px",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        ✔
+                      </Typography>
+                    )}
+                    <IoMdCloseCircle
+                      style={{
+                        position: "absolute",
+                        top: "8px",
+                        left: "8px",
+                        fontSize: "28px",
+                        color: "red",
+                        cursor: "pointer",
+                        background: "white",
+                        borderRadius: "50%",
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setImagePreview(null);
+                        setHowWeDelivered({ ...howWeDelivered, image: null });
+                        setUploadSuccess(false);
+                        if (fileInputRef.current)
+                          fileInputRef.current.value = null;
+                      }}
+                    />
+                  </>
+                ) : (
+                  <Box sx={{ textAlign: "center", color: "#888" }}>
+                    <FaCloudUploadAlt size={48} />
+                    <Typography variant="body1" sx={{ mt: 1 }}>
+                      Upload file here
+                    </Typography>
+                  </Box>
+                )}
+                <input
+                  type="file"
+                  accept="image/png, image/jpeg, image/webp, image/svg+xml"
+                  style={{ display: "none" }}
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                />
+              </Box>
+              <TextField
+                fullWidth
+                label="Lower description"
+                multiline
+                rows={6}
+                value={howWeDelivered.lower_description}
+                onChange={(e) =>
+                  setHowWeDelivered({
+                    ...howWeDelivered,
+                    lower_description: e.target.value,
+                  })
+                }
+                error={!!errors["how_we_delivered.lower_description"]}
+                helperText={errors["how_we_delivered.lower_description"]}
+              />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={howWeDelivered.published}
+                    onChange={() =>
+                      setHowWeDelivered({
+                        ...howWeDelivered,
+                        published: !howWeDelivered.published,
+                      })
+                    }
+                  />
+                }
+                label={howWeDelivered.published ? "Published" : "Draft"}
+              />
+            </Box>
+            <Box
+              sx={{
+                borderRadius: "var(--default-border-radius)",
+                display: "flex",
+                flexDirection: "column",
+                gap: "20px",
+                boxShadow: "2px 0px 10px var(--shadow-low1)",
+                padding: "20px",
+                height: "fit-content",
+              }}
+            >
+              {/* FAQs */}
+              <Typography
+                variant="h5"
+                sx={{ color: "var(--background-color)" }}
+              >
+                FAQs Section
+              </Typography>
+              <TextField
+                fullWidth
+                label="FAQs Title"
+                value={faqs.title}
+                onChange={(e) => setFaqs({ ...faqs, title: e.target.value })}
+                error={!!errors["faqs.title"]}
+                helperText={errors["faqs.title"]}
+              />
+              <TextField
+                fullWidth
+                label="FAQs Description"
+                multiline
+                rows={6}
+                value={faqs.description}
+                onChange={(e) =>
+                  setFaqs({ ...faqs, description: e.target.value })
+                }
+                error={!!errors["faqs.description"]}
+                helperText={errors["faqs.description"]}
+              />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={faqs.published}
+                    onChange={() =>
+                      setFaqs({ ...faqs, published: !faqs.published })
+                    }
+                  />
+                }
+                label={faqs.published ? "Published" : "Draft"}
+              />{" "}
+              {tableUI1}
+            </Box>
+            <Box
+              sx={{
+                borderRadius: "var(--default-border-radius)",
+                display: "flex",
+                flexDirection: "column",
+                gap: "20px",
+                boxShadow: "2px 0px 10px var(--shadow-low1)",
+                padding: "20px",
+                height: "fit-content",
+              }}
+            >
+              {/* Video */}
+              <Typography
+                variant="h5"
+                sx={{ color: "var(--background-color)" }}
+              >
+                Video Section
+              </Typography>
+              <TextField
+                fullWidth
+                label="Video Description"
+                multiline
+                rows={6}
+                value={video.description}
+                onChange={(e) =>
+                  setVideo({ ...video, description: e.target.value })
+                }
+                error={!!errors["video.description"]}
+                helperText={errors["video.description"]}
+              />
+              <TextField
+                fullWidth
+                label="Video URL"
+                value={video.url}
+                onChange={(e) => setVideo({ ...video, url: e.target.value })}
+                error={!!errors["video.url"]}
+                helperText={errors["video.url"]}
+              />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={video.published}
+                    onChange={() =>
+                      setVideo({ ...video, published: !video.published })
+                    }
+                  />
+                }
+                label={video.published ? "Published" : "Draft"}
+              />
+            </Box>
+
+            <Box
+              sx={{
+                borderRadius: "var(--default-border-radius)",
+                display: "flex",
+                flexDirection: "column",
+                gap: "20px",
+                boxShadow: "2px 0px 10px var(--shadow-low1)",
+                padding: "20px",
+                height: "fit-content",
+              }}
+            >
+              <Typography
+                variant="h5"
+                sx={{ color: "var(--background-color)" }}
+              >
+                Portfolios Section
+              </Typography>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={portfolio.published}
+                    onChange={() =>
+                      setPortfolio({
+                        ...portfolio,
+                        published: !portfolio.published,
+                      })
+                    }
+                  />
+                }
+                label={portfolio.published ? "Published" : "Draft"}
+              />{" "}
+              {tableUI2}
+            </Box>
+          </>
+        )}
         <TextField
           fullWidth
           label="Detail"
           multiline
-          rows={4}
+          rows={16}
           value={detail}
           onChange={(e) => setDetail(e.target.value)}
           error={!!errors.detail}
           helperText={errors.detail}
         />
-
-        {id && (
-          <>
-            {/* FAQs */}
-            <Typography variant="h6">FAQs</Typography>
-            <TextField
-              fullWidth
-              label="FAQs Title"
-              value={faqs.title}
-              onChange={(e) => setFaqs({ ...faqs, title: e.target.value })}
-              error={!!errors["faqs.title"]}
-              helperText={errors["faqs.title"]}
-            />
-            <TextField
-              fullWidth
-              label="FAQs Description"
-              multiline
-              rows={2}
-              value={faqs.description}
-              onChange={(e) =>
-                setFaqs({ ...faqs, description: e.target.value })
-              }
-              error={!!errors["faqs.description"]}
-              helperText={errors["faqs.description"]}
-            />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={faqs.published}
-                  onChange={() =>
-                    setFaqs({ ...faqs, published: !faqs.published })
-                  }
-                />
-              }
-              label={faqs.published ? "Published" : "Draft"}
-            />{" "}
-            {tableUI1}
-            <TextField
-              fullWidth
-              label="How We Delivered Description"
-              multiline
-              rows={2}
-              value={howWeDelivered.description}
-              onChange={(e) =>
-                setHowWeDelivered({
-                  ...howWeDelivered,
-                  description: e.target.value,
-                })
-              }
-              error={!!errors["how_we_delivered.description"]}
-              helperText={errors["how_we_delivered.description"]}
-            />
-            {/* Upload UI */}
-            <Box
-              sx={{
-                position: "relative",
-                width: "500px",
-                aspectRatio: "16/9",
-                border: errors["how_we_delivered.image"]
-                  ? "2px solid red"
-                  : "2px dashed #ccc",
-                borderRadius: "12px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                overflow: "hidden",
-                mb: 2,
-                "&:hover": { borderColor: "primary.main" },
-              }}
-              onClick={() => fileInputRef.current?.click()}
-            >
-              {imagePreview ? (
-                <>
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
-                  />
-                  {uploading && (
-                    <Box
-                      sx={{
-                        position: "absolute",
-                        bottom: 0,
-                        left: 0,
-                        height: "6px",
-                        width: `${uploadProgress}%`,
-                        background: "green",
-                      }}
-                    />
-                  )}
-                  {uploadSuccess && (
-                    <Typography
-                      sx={{
-                        position: "absolute",
-                        top: "8px",
-                        right: "8px",
-                        background: "white",
-                        color: "green",
-                        borderRadius: "50%",
-                        padding: "4px 8px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      ✔
-                    </Typography>
-                  )}
-                  <IoMdCloseCircle
-                    style={{
-                      position: "absolute",
-                      top: "8px",
-                      left: "8px",
-                      fontSize: "28px",
-                      color: "red",
-                      cursor: "pointer",
-                      background: "white",
-                      borderRadius: "50%",
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setImagePreview(null);
-                      setHowWeDelivered({ ...howWeDelivered, image: null });
-                      setUploadSuccess(false);
-                      if (fileInputRef.current)
-                        fileInputRef.current.value = null;
-                    }}
-                  />
-                </>
-              ) : (
-                <Box sx={{ textAlign: "center", color: "#888" }}>
-                  <FaCloudUploadAlt size={48} />
-                  <Typography variant="body1" sx={{ mt: 1 }}>
-                    Upload file here
-                  </Typography>
-                </Box>
-              )}
-              <input
-                type="file"
-                accept="image/png, image/jpeg, image/webp"
-                style={{ display: "none" }}
-                ref={fileInputRef}
-                onChange={handleFileChange}
-              />
-            </Box>
-            <TextField
-              fullWidth
-              label="Lower description"
-              multiline
-              rows={2}
-              value={howWeDelivered.lower_description}
-              onChange={(e) =>
-                setHowWeDelivered({
-                  ...howWeDelivered,
-                  lower_description: e.target.value,
-                })
-              }
-              error={!!errors["how_we_delivered.lower_description"]}
-              helperText={errors["how_we_delivered.lower_description"]}
-            />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={howWeDelivered.published}
-                  onChange={() =>
-                    setHowWeDelivered({
-                      ...howWeDelivered,
-                      published: !howWeDelivered.published,
-                    })
-                  }
-                />
-              }
-              label={howWeDelivered.published ? "Published" : "Draft"}
-            />
-            {/* Video */}
-            <Typography variant="h6">Video</Typography>
-            <TextField
-              fullWidth
-              label="Video Description"
-              multiline
-              rows={2}
-              value={video.description}
-              onChange={(e) =>
-                setVideo({ ...video, description: e.target.value })
-              }
-              error={!!errors["video.description"]}
-              helperText={errors["video.description"]}
-            />
-            <TextField
-              fullWidth
-              label="Video URL"
-              value={video.url}
-              onChange={(e) => setVideo({ ...video, url: e.target.value })}
-              error={!!errors["video.url"]}
-              helperText={errors["video.url"]}
-            />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={video.published}
-                  onChange={() =>
-                    setVideo({ ...video, published: !video.published })
-                  }
-                />
-              }
-              label={video.published ? "Published" : "Draft"}
-            />
-        
-       
-
-<Typography variant="h6">Portfolios</Typography>
-      
-         <FormControlLabel
-              control={
-                <Switch
-                  checked={portfolio.published}
-                  onChange={() =>
-                    setPortfolio({ ...portfolio, published: !portfolio.published })
-                  }
-                />
-              }
-              label={portfolio.published ? "Published" : "Draft"}
-            />{" "}
-              {tableUI2}
-          </>
-         )}
 
         <FormControlLabel
           control={

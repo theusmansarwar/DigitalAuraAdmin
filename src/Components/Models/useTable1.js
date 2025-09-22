@@ -113,8 +113,8 @@ export function useTable1({ attributes1, tableType, data = []  }) {
           onConfirm={handleDelete}
         />
 
-        <Box sx={{ width: "100%", marginBottom:"50px" }}>
-          <Paper sx={{ width: "100%", maxHeight: "95vh", boxShadow: "none" }}>
+        <Box sx={{ width: "100%", marginBottom:"20px" }}>
+          <Paper sx={{ width: "100%", boxShadow: "none" }}>
             <Toolbar sx={{ display: "flex", justifyContent: "space-between"  }}>
               <Typography
                 variant="h5"
