@@ -8,8 +8,8 @@ import {
   Switch,
   FormControlLabel,
 } from "@mui/material";
-import { createnewCategory, createNewSuccessStory } from "../../DAL/create";
-import { updateCategory, updateSuccessStories } from "../../DAL/edit";
+import {  createNewSuccessStory } from "../../DAL/create";
+import { updateSuccessStories } from "../../DAL/edit";
 
 const style = {
   position: "absolute",

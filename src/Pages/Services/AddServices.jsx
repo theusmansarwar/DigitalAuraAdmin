@@ -5,7 +5,11 @@ import { fetchservicebyid } from "../../DAL/fetch";
 import { createNewService, uploadimage } from "../../DAL/create";
 import { updateService } from "../../DAL/edit";
 import { FaCircleInfo } from "react-icons/fa6";
-
+import { BsInfoCircle } from "react-icons/bs";
+import howwedelivered from '../../Assets/howwedelivered.png'
+import faqssectionimg from '../../Assets/Faqssection.png'
+import videosectionimg from '../../Assets/videosection.png'
+import portfoliosectionimg from '../../Assets/portfolioimg.png'
 import {
   Box,
   Button,
@@ -20,13 +24,16 @@ import { useTable1 } from "../../Components/Models/useTable1";
 import { baseUrl } from "../../Config/Config";
 import { useTable2 } from "../../Components/Models/useTable2";
 import InfoModal from "../../Components/Models/InfoModal";
+import InfoImageModel from "../../Components/Models/InfoImageModal";
 
 const AddServices = () => {
   const navigate = useNavigate();
   const { showAlert } = useAlert();
   const { id } = useParams();
   const [open, setOpen] = useState(false);
-
+ const [infoopen, setInfoOpen] = useState(false);
+ const [infoboxheading, setInfoBoxHeading] = useState(false);
+ const [infoboximage, setInfoBoxImage] = useState(false);
   // Service states
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -269,7 +276,7 @@ const AddServices = () => {
       setLoading(false);
     }
   };
-
+ 
   // Table attributes
   const attributes1 = [
     { id: "question", label: "Questions" },
@@ -292,7 +299,12 @@ const AddServices = () => {
     tableType: "Portfolio",
     data: portfolio?.items || [],
   });
-
+const openinfobox=(heading,image)=>{
+  setInfoBoxImage(image);
+  setInfoBoxHeading(heading)
+  setInfoOpen(true);
+  
+}
   return (
     <Box sx={{ p: 3 }}>
       <Button
@@ -314,7 +326,7 @@ const AddServices = () => {
       </Button>
 
       <InfoModal open={open} onClose={() => setOpen(false)} />
-
+      <InfoImageModel open={infoopen} onClose={() => setInfoOpen(false)}  heading={infoboxheading} image={infoboximage} />
       <Typography
         variant="h4"
         sx={{ color: "var(--background-color)" }}
@@ -409,7 +421,7 @@ const AddServices = () => {
           ) : (
             <Box sx={{ textAlign: "center", color: "#888" }}>
               <FaCloudUploadAlt size={32} />
-              <Typography variant="body2">Upload Icon</Typography>
+              <Typography variant="body2">Upload Service Icon  <BsInfoCircle style={{fontSize:'16px'}} onClick={()=>{openinfobox("Portfolio Section", portfoliosectionimg) }}/></Typography>
             </Box>
           )}
           <input
@@ -457,7 +469,7 @@ const AddServices = () => {
                 variant="h5"
                 sx={{ color: "var(--background-color)" }}
               >
-                How We Delivered Section
+                How We Delivered Section  <BsInfoCircle style={{fontSize:'16px'}} onClick={()=>{openinfobox("How We Delivered Section",howwedelivered) }}/>
               </Typography>
               <TextField
                 fullWidth
@@ -616,7 +628,7 @@ const AddServices = () => {
                 variant="h5"
                 sx={{ color: "var(--background-color)" }}
               >
-                FAQs Section
+                FAQs Section   <BsInfoCircle style={{fontSize:'16px'}} onClick={()=>{openinfobox("FAQs Section",faqssectionimg) }}/>
               </Typography>
               <TextField
                 fullWidth
@@ -667,7 +679,7 @@ const AddServices = () => {
                 variant="h5"
                 sx={{ color: "var(--background-color)" }}
               >
-                Video Section
+                Video Section   <BsInfoCircle style={{fontSize:'16px'}} onClick={()=>{openinfobox("Video Section",videosectionimg) }}/>
               </Typography>
               <TextField
                 fullWidth
@@ -717,7 +729,7 @@ const AddServices = () => {
                 variant="h5"
                 sx={{ color: "var(--background-color)" }}
               >
-                Portfolios Section
+                Portfolios Section   <BsInfoCircle style={{fontSize:'16px'}} onClick={()=>{openinfobox("Portfolio Section",portfoliosectionimg) }}/>
               </Typography>
               <FormControlLabel
                 control={
