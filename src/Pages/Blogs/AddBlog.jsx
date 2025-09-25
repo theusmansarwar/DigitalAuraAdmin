@@ -20,6 +20,7 @@ import { updateBlog } from "../../DAL/edit";
 import { createBlog } from "../../DAL/create";
 import { baseUrl } from "../../Config/Config";
 import { FaCloudUploadAlt } from "react-icons/fa";
+import UploadFile from "../../Components/Models/UploadFile";
 
 const style = {
   Width: "100%",
@@ -105,18 +106,12 @@ const AddBlog = () => {
     fetchCategories();
   }, []);
 
-  const handleFileChange = (event) => {
-    if (event.target.files?.[0]) {
-      const file = event.target.files[0];
-      setImage(URL.createObjectURL(file));
-    }
-  };
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const errorObj = {};
-    if (!categoryId) errorObj.category = "Category is required.";
 
     try {
       JSON.parse(faqSchemaText);
@@ -142,10 +137,8 @@ const AddBlog = () => {
     formData.append("featured", isFeatured);
     formData.append("faqSchema", faqSchemaText);
     formData.append("author", author || newauthor);
-
-    if (fileInputRef.current?.files[0]) {
-      formData.append("thumbnail", fileInputRef.current.files[0]);
-    }
+    formData.append("thumbnail",image);
+    
 
     try {
       const response = id
@@ -223,76 +216,23 @@ const AddBlog = () => {
           sx={{ mb: 2 }}
         />
 
-        <Box
+        <Typography
+          variant="h5"
           sx={{
-            position: "relative",
-            width: "500px",
-            aspectRatio: "16/9", // keeps 16:9 size
-            border: errors?.thumbnail ? "2px solid red" : "2px dashed #ccc",
-            borderRadius: "12px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            justifySelf: "center",
-            alignSelf: "center",
-            cursor: "pointer",
-            overflow: "hidden",
-            mb: 2,
-            "&:hover": {
-              borderColor: "primary.main", // hover effect
-            },
+            color: "var(--background-color)",
+            marginTop: "20px",
+            marginBottom: "20px",
           }}
-          onClick={() => fileInputRef.current?.click()}
         >
-          {/* If image uploaded */}
-          {image ? (
-            <>
-              <img
-                src={image}
-                alt="Thumbnail"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                }}
-              />
-              <IoMdCloseCircle
-                style={{
-                  position: "absolute",
-                  top: "8px",
-                  right: "8px",
-                  fontSize: "28px",
-                  color: "red",
-                  cursor: "pointer",
-                  background: "white",
-                  borderRadius: "50%",
-                }}
-                onClick={(e) => {
-                  e.stopPropagation(); // prevent triggering file select
-                  setImage(null); // clear image instead of showing dummy
-                  if (fileInputRef.current) fileInputRef.current.value = null;
-                }}
-              />
-            </>
-          ) : (
-            // Show Upload placeholder
-            <Box sx={{ textAlign: "center", color: "#888" }}>
-              <FaCloudUploadAlt size={48} />
-              <Typography variant="body1" sx={{ mt: 1 }}>
-                Upload file here
-              </Typography>
-            </Box>
-          )}
-
-          {/* Hidden input */}
-          <input
-            type="file"
-            accept="image/png, image/jpeg, image/webp"
-            style={{ display: "none" }}
-            ref={fileInputRef}
-            onChange={handleFileChange}
-          />
-        </Box>
+          {" "}
+          Blog Thumbnail
+        </Typography>
+        <UploadFile
+          multiple={false}
+          accept="image/*"
+          initialFiles={image}
+          onUploadComplete={(path) => setImage(path)}
+        />
         <TextField
           fullWidth
           label="Slug"

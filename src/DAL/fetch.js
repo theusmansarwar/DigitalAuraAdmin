@@ -266,6 +266,57 @@ export const fetchallTeamCategories = async (id) => {
   };
   return invokeApi(reqObj);
 };
+
+export const fetchTeamCategoryList = async (id) => {
+  const reqObj = {
+    path: `/teamcategory/live`,
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("Token")}`,
+    },
+
+    body: {},
+  };
+  return invokeApi(reqObj);
+};
+export const fetchRoleList = async (id) => {
+  const reqObj = {
+    path: `/role/live`,
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("Token")}`,
+    },
+
+    body: {},
+  };
+  return invokeApi(reqObj);
+};
+
+export const fetchTeamMember = async (page, rowsPerPages) => {
+  const reqObj = {
+    path: `/team/view?limit=${rowsPerPages}&page=${page}`,
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("Token")}`,
+    },
+
+    body: {},
+  };
+  return invokeApi(reqObj);
+};
+export const fetchTeamMemberById = async (id) => {
+  const reqObj = {
+    path: `/team/view/${id}`,
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("Token")}`,
+    },
+
+    body: {},
+  };
+  return invokeApi(reqObj);
+};
+
 export const fetchallApplication = async ( page, rowsPerPages) => {
   const reqObj = {
     path: `/applications/ApplicationList?limit=${rowsPerPages}&page=${page}`,

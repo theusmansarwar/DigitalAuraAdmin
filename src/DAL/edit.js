@@ -1,17 +1,37 @@
 import { invokeApi } from "../Utils/InvokeApi";
 export const updateBlog = async (id, data) => {
+ 
   const reqObj = {
     path: `/blog/update/${id}`,
     method: "PUT",
-    headers: {
-      "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${localStorage.getItem("Token")}`,
-    },
+    headers: {  
+       "Content-Type": "application/json" ,
+      Authorization: `Bearer ${localStorage.getItem("Token")}`,},
     postData: data,
   };
   return invokeApi(reqObj);
 };
 
+export const updateTeamCategory = async (id,data) => {
+ 
+  const reqObj = {
+    path: `/teamcategory/update/${id}`,
+    method: "PUT",
+    headers: {      Authorization: `Bearer ${localStorage.getItem("Token")}`,},
+    postData: data,
+  };
+  return invokeApi(reqObj);
+};
+export const updateTeamMember = async (id,data) => {
+ 
+  const reqObj = {
+    path: `/team/update/${id}`,
+    method: "PUT",
+    headers: {      Authorization: `Bearer ${localStorage.getItem("Token")}`,},
+    postData: data,
+  };
+  return invokeApi(reqObj);
+};
 export const updateHowwedo = async (id, data) => {
   const reqObj = {
     path: `/howwedo/update/${id}`,

@@ -8,7 +8,7 @@ import {
   Switch,
   FormControlLabel,
 } from "@mui/material";
-import { createnewusertype, createTeamMember } from "../../DAL/create";
+import { createnewuser, createnewusertype, createTeamMember } from "../../DAL/create";
 import { updateuser, updateusertype } from "../../DAL/edit";
 import { fetchallUsertypeslist } from "../../DAL/fetch"; // Make sure this function exists
 
@@ -39,7 +39,7 @@ export default function AddUser({ open, setOpen, Modeltype, Modeldata, onRespons
     setEmail(Modeldata?.email || "");
     setPublished(Modeldata?.published || false);
     setId(Modeldata?._id || "");
-    setSelectedTypeId(Modeldata?.typeId || "");
+    setSelectedTypeId(Modeldata?.type?._id || "");
 
     const fetchTypes = async () => {
       const res = await fetchallUsertypeslist();
@@ -66,7 +66,7 @@ export default function AddUser({ open, setOpen, Modeltype, Modeldata, onRespons
 
     let response;
     if (Modeltype === "Add") {
-      response = await createTeamMember(usertypeData);
+      response = await createnewuser(usertypeData);
     } else {
       response = await updateuser(id, usertypeData);
     }
@@ -105,7 +105,7 @@ export default function AddUser({ open, setOpen, Modeltype, Modeldata, onRespons
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-
+{Modeltype === "Add" && (
         <TextField
           sx={{ marginTop: "10px", borderRadius: "6px" }}
           fullWidth
@@ -116,6 +116,7 @@ export default function AddUser({ open, setOpen, Modeltype, Modeldata, onRespons
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+)}
 
         <select
           style={{
@@ -131,7 +132,7 @@ export default function AddUser({ open, setOpen, Modeltype, Modeldata, onRespons
           <option value="" disabled>
             Select User Type
           </option>
-          {userTypes.map((type) => (
+          {userTypes?.map((type) => (
             <option key={type._id} value={type._id}>
               {type.name}
             </option>

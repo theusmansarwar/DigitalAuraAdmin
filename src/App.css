@@ -1,9 +1,9 @@
 :root {
-  --background-color: #E85319;
+  --background-color: #688ECA;
   --headings-color: var(--background-color);
-  --shadow-low1: #e73a004a;
+  --shadow-low1: hsla(217, 48%, 60%, 0.299);
   --shadow-low2: #006bcf00;
-  --shadow-low3: #feaa91;
+  --shadow-low3: #8daee4;
   --default-box-shadow: 0 0 4px var(--background-color);
   --left-space: 5%;
   --mid-space: 90%;

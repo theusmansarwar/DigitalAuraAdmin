@@ -1,0 +1,251 @@
+.joditEditor {
+    height: auto;
+    
+}
+
+.upper-section2 {
+  
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.upper-section2 .left{
+  
+    width: 85%;
+}
+.upper-section2 .left input {
+    width: 95.5%;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+.upper-section2 .left select {
+    width: 96.8%;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+.AddTeam  input {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.upper-section2 .left textarea {
+    width: 95.5%;
+    padding: 5px;
+    margin-bottom: 10px;
+    height: 60px; 
+    resize: none; 
+    line-height: 1.2; 
+    overflow: hidden; 
+}
+
+.AddTeam h3 {
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+
+
+
+.AddTeam h5{
+font-size: 14px;
+margin-top: 10px;
+}
+
+.upper-section{
+    display: flex;
+
+    justify-content: space-between;
+
+}
+
+.image-container2 {
+    position: relative;
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+  
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px var(--secondary-color);
+    border-style: dashed;
+    overflow: hidden;
+    border-radius: 12px;
+   
+
+
+}
+
+
+.image-container2 img {
+
+height: 100%;
+width: 100%;
+}
+
+.image-container2 .remove-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 2;
+    color: red;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+.published {
+    background-color: var(--secondary-color);
+    border: none;
+    color: white;
+    padding: 8px;
+    border-radius: var(--border-radius-secondary);
+    margin-top: 20px;
+    margin-bottom: 10px;
+    box-shadow:var( --all-side-box-shadow);
+    font-size: 12px;
+
+}
+.error{
+    color: var(--warning-color);
+    font-size: 10px;
+}
+.cancelbtn {
+    background-color: rgba(172, 172, 172, 0);
+  border: 1px solid var(--secondary-color);
+    color: var(--secondary-color);
+
+    padding: 8px;
+    border-radius: var(--border-radius-secondary);
+    margin-top: 20px;
+    margin-bottom: 10px;
+    box-shadow:var( --all-side-box-shadow);
+    font-size: 12px;
+ 
+
+}
+
+.button-sections{
+    width: 100%;
+    display: flex;
+justify-content: flex-end;
+    gap: 10px;
+    height: fit-content;
+
+}
+
+
+.toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 10px 0;
+  }
+  
+  .toggle-label {
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 25px;
+  }
+  
+  .toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .Draft{
+    color: var(--warning-color);
+  }
+  .Public{
+    color: rgb(0, 169, 17);
+  }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 25px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 19px;
+    width: 19px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+  }
+  
+  input:checked + .slider {
+    background-color: #4caf50;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(25px);
+  }
+  
+
+
+@media screen and (max-width: 1080px) {
+
+    .AddTeam {
+
+        padding: 5px;
+       height: auto;
+    }
+    .image-container2 {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        height: auto;
+        margin-top: 10px;
+        margin-bottom: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    
+    
+    }
+    
+    .image-container2 img {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        justify-self: center;
+        align-items: center;
+        border: 1px solid black;
+        background-color: aliceblue;
+    }
+    
+.AddTeam input {
+    width: 96%;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.AddTeam h3 {
+    font-size: 18px;
+}
+
+
+
+
+
+}

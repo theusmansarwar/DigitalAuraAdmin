@@ -9,51 +9,44 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  TextareaAutosize,
   Switch,
   FormControlLabel,
   CircularProgress,
 } from "@mui/material";
 import { useAlert } from "../../Components/Alert/AlertContext";
-import { fetchallpublishedserviceslist, fetchallservicescategorylist, fetchallserviceslist, fetchTestimonialbyid } from "../../DAL/fetch";
+import { fetchTestimonialbyid } from "../../DAL/fetch";
 import { updateTestimonial } from "../../DAL/edit";
 import { createTestimonial } from "../../DAL/create";
+import UploadFile from "../../Components/Models/UploadFile";
 
 const AddTestimonial = () => {
   const { id } = useParams();
   const { showAlert } = useAlert();
   const navigate = useNavigate();
 
-  const [name, setName] = useState("");
-  const [service, setService] = useState("");
-  const [location, setLocation] = useState("");
-  const [date, setDate] = useState("");
+  const [singlePath, setSinglePath] = useState("");
+  const [image, setImage] = useState("");
+  const [whatwedid, setWhatwedid] = useState("");
+  const [clientsays, setClientsays] = useState("");
   const [rating, setRating] = useState("");
-  const [description, setDescription] = useState("");
   const [published, setPublished] = useState(true);
-  const [services, setServices] = useState([]); // dropdown values
+  const [boost, setBoost] = useState("");
+  const [boosttext, setBoosttext] = useState("");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    const loadServices = async () => {
-    const res = await fetchallpublishedserviceslist();
-    setServices(res.services);
-  };
-  loadServices();
-
-
     const fetchTestimonial = async () => {
       try {
         const response = await fetchTestimonialbyid(id);
         if (response) {
-          setName(response.name || "");
-          setService(response.service || "");
+          setImage(response.image || "");
+          setWhatwedid(response.whatwedid || "");
+          setClientsays(response.clientsays || "");
           setRating(response.rating || "");
-          setDate(response.date || "");
-          setLocation(response.location || "");
-          setDescription(response.description || "");
           setPublished(response.published ?? true);
+          setBoost(response.boost || "");
+          setBoosttext(response.boosttext || "");
         }
       } catch (error) {
         console.error("Error fetching testimonial:", error);
@@ -62,35 +55,19 @@ const AddTestimonial = () => {
     if (id) fetchTestimonial();
   }, [id]);
 
-  // Handle Form Submission
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
     setErrors({});
 
-    // Form Validation
-    const newErrors = {};
-    if (!name) newErrors.name = "Name is required";
-    if (!service) newErrors.service = "Service is required";
-    if (!location) newErrors.location = "Location is required";
-    if (!date) newErrors.date = "Date is required";
-    if (!rating) newErrors.rating = "Rating is required";
-    if (!description) newErrors.description = "Description is required";
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      setLoading(false);
-      return;
-    }
-
     const formData = {
-      name,
-      service,
-      location,
-      date,
+      image: singlePath || image,
+      whatwedid,
+      clientsays,
       rating,
-      description,
       published,
+      boost,
+      boosttext,
     };
 
     try {
@@ -104,6 +81,14 @@ const AddTestimonial = () => {
       if (response.status === 201 || response.status === 200) {
         showAlert("success", response.message);
         navigate("/testimonials");
+      } else if (response.status === 400 && response.missingFields) {
+        // backend validation errors
+        const fieldErrors = {};
+        response.missingFields.forEach((f) => {
+          fieldErrors[f.name] = f.message;
+        });
+        setErrors(fieldErrors);
+        showAlert("error", response.message);
       } else {
         showAlert("error", "Something went wrong!");
       }
@@ -111,66 +96,54 @@ const AddTestimonial = () => {
       console.error("Error saving testimonial:", error);
       showAlert("error", "Internal server error.");
     }
+
     setLoading(false);
   };
 
   return (
-    <Box
-      component="form"
-      onSubmit={handleSubmit}
-      sx={{
-        width:"100%",
-      }}
-    >
+    <Box component="form" onSubmit={handleSubmit} sx={{ width: "100%" }}>
       <Typography variant="h5" gutterBottom>
         {id ? "Edit Testimonial" : "Add Testimonial"}
       </Typography>
 
-      <TextField
-        fullWidth
-        label="Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        error={!!errors.name}
-        helperText={errors.name}
-        margin="normal"
+      <Typography
+        variant="h5"
+        sx={{
+          color: "var(--background-color)",
+          marginTop: "20px",
+          marginBottom: "20px",
+        }}
+      >
+        Company Logo
+      </Typography>
+      <UploadFile
+        multiple={false}
+        accept="image/*"
+        initialFiles={image}
+        onUploadComplete={(path) => setSinglePath(path)}
       />
-      <FormControl fullWidth margin="normal" error={!!errors.service}>
-        <InputLabel>Select a Service</InputLabel>
-        <Select value={service} onChange={(e) => setService(e.target.value)}>
-          <MenuItem value="">
-            <em>Select a Service</em>
-          </MenuItem>
-          {services.map((srv) => (
-            <MenuItem key={srv._id} value={srv.title}>
-              {srv.title}
-            </MenuItem>
-          ))}
-        </Select>
-        {errors.service && (
-          <Typography color="error">{errors.service}</Typography>
-        )}
-      </FormControl>
+
+      {/* What We Did */}
       <TextField
         fullWidth
-        label="Location"
-        value={location}
-        onChange={(e) => setLocation(e.target.value)}
-        error={!!errors.location}
-        helperText={errors.location}
+        label="What We Did"
+        value={whatwedid}
+        onChange={(e) => setWhatwedid(e.target.value)}
+        error={!!errors.whatwedid}
+        helperText={errors.whatwedid}
         margin="normal"
       />
 
-      {/* Date Picker */}
+      {/* Client Says */}
       <TextField
         fullWidth
-        type="date"
-        label="Date"
-        value={date}
-        onChange={(e) => setDate(e.target.value)}
-        InputLabelProps={{ shrink: true }}
-        error={!!errors.date}
-        helperText={errors.date}
+        label="Client Says"
+        multiline
+        minRows={3}
+        value={clientsays}
+        onChange={(e) => setClientsays(e.target.value)}
+        error={!!errors.clientsays}
+        helperText={errors.clientsays}
         margin="normal"
       />
 
@@ -187,25 +160,34 @@ const AddTestimonial = () => {
             </MenuItem>
           ))}
         </Select>
-        {errors.rating && (
-          <Typography color="error">{errors.rating}</Typography>
-        )}
+        {errors.rating && <Typography color="error">{errors.rating}</Typography>}
       </FormControl>
 
-      {/* Description */}
+      {/* Boost */}
       <TextField
         fullWidth
-        label="Description"
-        multiline
-        minRows={3}
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        error={!!errors.description}
-        helperText={errors.description}
+        label="Boost"
+        value={boost}
+        onChange={(e) => setBoost(e.target.value)}
+        error={!!errors.boost}
+        helperText={errors.boost}
         margin="normal"
       />
 
-      {/* Published Toggle */}
+      {/* Boost Text */}
+      <TextField
+        fullWidth
+        label="Boost Text"
+        multiline
+        minRows={2}
+        value={boosttext}
+        onChange={(e) => setBoosttext(e.target.value)}
+        error={!!errors.boosttext}
+        helperText={errors.boosttext}
+        margin="normal"
+      />
+
+      {/* Published */}
       <FormControlLabel
         control={
           <Switch
@@ -227,12 +209,7 @@ const AddTestimonial = () => {
         >
           Cancel
         </Button>
-        <Button
-          type="submit"
-          variant="contained"
-          color="var(--background-color)"
-          disabled={loading}
-        >
+        <Button type="submit" variant="contained" disabled={loading}>
           {loading ? <CircularProgress size={24} /> : id ? "Update" : "Save"}
         </Button>
       </Box>

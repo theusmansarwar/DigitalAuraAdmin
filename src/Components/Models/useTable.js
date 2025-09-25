@@ -16,6 +16,7 @@ import {
   IconButton,
   TextField,
   InputAdornment,
+  Avatar,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
@@ -27,12 +28,14 @@ import {
   fetchallLeads,
   fetchallservicescategorylist,
   fetchallserviceslist,
+  fetchallTeamCategories,
   fetchallTestimonialslist,
   fetchallTickets,
   fetchallUserlist,
   fetchallUserTypelist,
   fetchBloglistofwritter,
   fetchFeaturedBloglist,
+  fetchTeamMember,
   searchBlog,
   searchService,
 } from "../../DAL/fetch";
@@ -49,6 +52,8 @@ import {
   deleteAllLeads,
   deleteAllServices,
   deleteAllServicesCategories,
+  deleteAllTeam,
+  deleteAllTeamCategories,
   deleteAllTestimonials,
   deleteAllTickets,
   deleteAllUsers,
@@ -57,11 +62,12 @@ import {
 import { useAlert } from "../Alert/AlertContext";
 import ApproveComment from "./approveComment";
 import DeleteModal from "./confirmDeleteModel";
-import UserType from "../../Pages/Users/UserType";
 import AddUsertype from "./addUsertype";
 import AddUser from "./addUser";
 import AddServicesCategories from "./addServicesCategories";
 import ViewLeads from "./viewLeads";
+import AddTeamCategories from "./addTeamCategory";
+import { baseUrl } from "../../Config/Config";
 
 export function useTable({ attributes, tableType, limitPerPage = 25 }) {
   const { showAlert } = useAlert(); // Since you created a custom hook
@@ -77,7 +83,7 @@ export function useTable({ attributes, tableType, limitPerPage = 25 }) {
     savedState.rowsPerPage || limitPerPage
   );
   const [searchQuery, setSearchQuery] = useState(savedState.searchQuery || "");
-
+  const [openTeamCategoryModal, setOpenTeamCategoryModal] = useState(false);
   const [data, setData] = useState([]);
   const [totalRecords, setTotalRecords] = useState(0);
   const navigate = useNavigate();
@@ -158,7 +164,7 @@ export function useTable({ attributes, tableType, limitPerPage = 25 }) {
       response = await fetchallUserTypelist(page, rowsPerPage);
       console.log("Response:", response);
 
-      setData(response.userType);
+      setData(response?.userType || []);
       setPage(response.currentPage);
       setTotalRecords(response.totalUserType);
     } else if (tableType === "Tickets") {
@@ -169,6 +175,22 @@ export function useTable({ attributes, tableType, limitPerPage = 25 }) {
       setPage(response.currentPage);
 
       setTotalRecords(response.totalTickets);
+    } else if (tableType === "Team Category") {
+      response = await fetchallTeamCategories(page, rowsPerPage);
+      setData(response.categories);
+      setTotalRecords(response.totalCategories);
+      if (response.status == 400) {
+        localStorage.removeItem("Token");
+        navigate("/login");
+      }
+    } else if (tableType === "Team") {
+      response = await fetchTeamMember(page, rowsPerPage);
+      setData(response.members);
+      setTotalRecords(response?.total);
+      if (response.status == 400) {
+        localStorage.removeItem("Token");
+        navigate("/login");
+      }
     } else if (tableType === "Users") {
       response = await fetchallUserlist(page, rowsPerPage);
       console.log("Response:", response);
@@ -256,6 +278,12 @@ export function useTable({ attributes, tableType, limitPerPage = 25 }) {
       setModelData(category);
       setModeltype("Update");
       setOpenCommentModal(true);
+    } else if (tableType === "Team Category") {
+      setModelData(category);
+      setModeltype("Update");
+      setOpenTeamCategoryModal(true);
+    } else if (tableType === "Team") {
+      navigate(`/edit-team/${category._id}`);
     }
   };
 
@@ -293,6 +321,10 @@ export function useTable({ attributes, tableType, limitPerPage = 25 }) {
         response = await deleteAllUsers({ ids: selected });
       } else if (tableType === "Tickets") {
         response = await deleteAllTickets({ ids: selected });
+      } else if (tableType === "Team Category") {
+        response = await deleteAllTeamCategories({ ids: selected });
+      } else if (tableType === "Team") {
+        response = await deleteAllTeam({ ids: selected });
       }
 
       if (response.status === 200) {
@@ -335,6 +367,12 @@ export function useTable({ attributes, tableType, limitPerPage = 25 }) {
       navigate("/add-blog");
     } else if (tableType === "Testimonial") {
       navigate("/add-testimonial");
+    } else if (tableType === "Team") {
+      navigate("/add-team");
+    } else if (tableType === "Team Category") {
+      setOpenTeamCategoryModal(true);
+      setModeltype("Add");
+      setModelData();
     }
   };
 
@@ -361,6 +399,13 @@ export function useTable({ attributes, tableType, limitPerPage = 25 }) {
         <AddCategories
           open={openCategoryModal}
           setOpen={setOpenCategoryModal}
+          Modeltype={modeltype}
+          Modeldata={modelData}
+          onResponse={handleResponse}
+        />
+        <AddTeamCategories
+          open={openTeamCategoryModal}
+          setOpen={setOpenTeamCategoryModal}
           Modeltype={modeltype}
           Modeldata={modelData}
           onResponse={handleResponse}
@@ -551,7 +596,7 @@ export function useTable({ attributes, tableType, limitPerPage = 25 }) {
                           />
                         </TableCell>
 
-                        {attributes.map((attr) => (
+                        {attributes?.map((attr) => (
                           <TableCell
                             key={attr.id}
                             sx={{ color: "var(--black-color)" }}
@@ -559,6 +604,35 @@ export function useTable({ attributes, tableType, limitPerPage = 25 }) {
                             {attr.id === "createdAt" ||
                             attr.id === "publishedDate" ? (
                               formatDate(row[attr.id])
+                            ) : attr.id === "image" ||
+                              attr.id === "thumbnail" ? (
+                              tableType === "Testimonial" ||
+                              tableType === "Blogs" ? (
+                                row[attr.id] ? (
+                                  <img
+                                    alt=""
+                                    src={baseUrl + row[attr.id]}
+                                    style={{
+                                      height: "50px",
+                                      maxWidth: "200px",
+                                      objectFit: "contain",
+                                      margin:"auto"
+                                    }}
+                                  />
+                                ) : (
+                                  <Avatar
+                                    alt="Default"
+                                    src="/static/images/avatar/1.jpg"
+                                    sx={{ width: 40, height: 40 }}
+                                  />
+                                )
+                              ) : (
+                                <Avatar
+                                  alt="Default"
+                                  src={baseUrl + row[attr.id]}
+                                  sx={{ width: 40, height: 40 }}
+                                />
+                              )
                             ) : attr.id === "published" ? (
                               <span
                                 style={{
@@ -576,22 +650,29 @@ export function useTable({ attributes, tableType, limitPerPage = 25 }) {
                                 {row[attr.id] ? "Public" : "Private"}
                               </span>
                             ) : attr.id === "status" ? (
-  <span
-    style={{
-      color: row.isclosed ? "red" : row.status ? "green" : "orange",
-      background: row.isclosed
-        ? "#f8d7da"
-        : row.status
-        ? "#d4edda"
-        : "#fff3cd",
-      padding: "5px",
-      minWidth: "100px",
-      borderRadius: "var(--default-border-radius)",
-    }}
-  >
-    {row.isclosed ? "Closed" : row.status ? "Answered" : "Pending"}
-  </span>
-
+                              <span
+                                style={{
+                                  color: row.isclosed
+                                    ? "red"
+                                    : row.status
+                                    ? "green"
+                                    : "orange",
+                                  background: row.isclosed
+                                    ? "#f8d7da"
+                                    : row.status
+                                    ? "#d4edda"
+                                    : "#fff3cd",
+                                  padding: "5px",
+                                  minWidth: "100px",
+                                  borderRadius: "var(--default-border-radius)",
+                                }}
+                              >
+                                {row.isclosed
+                                  ? "Closed"
+                                  : row.status
+                                  ? "Answered"
+                                  : "Pending"}
+                              </span>
                             ) : row[attr.id] === 0 ? (
                               0
                             ) : typeof getNestedValue(row, attr.id) ===

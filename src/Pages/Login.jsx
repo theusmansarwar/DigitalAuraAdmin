@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
-
+import { Box, Button, TextField, Typography, Paper, CircularProgress } from "@mui/material";
 import { login } from "../DAL/auth";
+import logo from "../Assets/zemaltlogo.svg";
 import './login.css'
-import logo from '../Assets/DigitalAuraLogo.png'
+import { useAlert } from "../Components/Alert/AlertContext";
+
+
 const Login = ({ onLoginSuccess }) => {
+   const { showAlert } = useAlert(); 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -17,94 +21,120 @@ const Login = ({ onLoginSuccess }) => {
     }
   }, []);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+const handleLogin = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("password", password);
+  const formData = new FormData();
+  formData.append("email", email);
+  formData.append("password", password);
 
-    try {
-      const result = await login(formData);
+  try {
+    const result = await login(formData);
 
-      if (result.status == 200) {
-        alert("Login Successful: " + result?.message);
-        localStorage.setItem("Token", result?.token);
-        localStorage.setItem("user", JSON.stringify(result?.data));
-        onLoginSuccess();
-      } else {
-        // Login failed, show the error message from the server
-        alert("Login failed: " + result?.message);
-      }
-    } catch (error) {
-      if (error.response) {
-        // The server responded with a status code out of the 2xx range
-        console.log("<=== Api-Error ===>", error.response.data);
-        alert(
-          "Login failed: " + error.response.data.message || "An error occurred."
-        );
-      } else if (error.request) {
-        // The request was made, but no response was received
-        console.log(
-          "<=== Api-Request-Error ===> No response received:",
-          error.request
-        );
-        alert("Login failed: No response from the server.");
-      } else {
-        // Something else went wrong in setting up the request
-        console.log("<=== Api-Unknown-Error ===>", error.message);
-        alert("Login failed: " + error.message);
-      }
-    } finally {
-      setLoading(false);
+    if (result.status === 200) {
+      showAlert("success", result?.message || "Login successful!");
+      localStorage.setItem("Token", result?.token);
+      localStorage.setItem("user", JSON.stringify(result?.data));
+      onLoginSuccess();
+    } else {
+      showAlert("error", result?.message || "Login failed.");
     }
-  };
+  } catch (error) {
+    if (error.response) {
+      showAlert("error", error.response.data.message || "An error occurred.");
+    } else if (error.request) {
+      showAlert("error", "No response from the server.");
+    } else {
+      showAlert("error", error?.message || "Unexpected error occurred.");
+    }
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
-    <div className="login">
+    <Box
+    className="login"
+   
+    >
       {loading && (
-        <div className="progress">
-          <div className="loader"></div>
-        </div>
+        <CircularProgress
+          size={60}
+          thickness={4}
+          sx={{
+            position: "absolute",
+            top: "20px",
+            color: "primary.main",
+          }}
+        />
       )}
-      <div className="form-area">
-        <form onSubmit={handleLogin}>
-        
-          <img src={logo} alt="digitalaura"/>
-            <h3>Admin Login</h3>
-          <div className="mb-3">
-            <label htmlFor="exampleInputEmail1" className="form-label">
-              Email address
-            </label>
-            <input
-              type="email"
-              className="form-control"
-              id="exampleInputEmail1"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              aria-describedby="emailHelp"
-              variant="outlined"
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="exampleInputPassword1" className="form-label">
-              Password
-            </label>
-            <input
-              type="password"
-              className="form-control"
-              id="exampleInputPassword1"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <button type="submit" className="btn btn-primary">
+
+      <Paper
+        elevation={6}
+        sx={{
+          width: 350,
+          p: 3,
+          borderRadius: 2,
+          textAlign: "center",
+        }}
+      >
+        <Box component="form" onSubmit={handleLogin}>
+          <Box
+            component="img"
+            src={logo}
+            alt="digitalaura"
+            sx={{
+              width: "30%",
+              display: "block",
+              mx: "auto",
+              my: 3,
+            }}
+          />
+
+          <Typography variant="h5" gutterBottom>
+            Admin Login
+          </Typography>
+
+          <TextField
+            fullWidth
+            type="email"
+            label="Email Address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            margin="normal"
+          />
+
+          <TextField
+            fullWidth
+            type="password"
+            label="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            margin="normal"
+          />
+
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{
+              mt: 2,
+              py: 1.2,
+              borderRadius: "6px",
+              backgroundColor: "var(--background-color)",
+              "&:hover": {
+                backgroundColor: "var(--background-color)",
+                opacity: 0.9,
+              },
+            }}
+          >
             Submit
-          </button>
-        </form>
-      </div>
-    </div>
+          </Button>
+        </Box>
+      </Paper>
+    </Box>
   );
 };
 

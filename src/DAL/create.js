@@ -5,7 +5,6 @@ export const createBlog = async (data) => {
     path: "/blog/create",
     method: "POST",
     headers: {
-      "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${localStorage.getItem("Token")}`,
     },
     postData: data,
@@ -15,6 +14,29 @@ export const createBlog = async (data) => {
 export const createNewFaq = async (data) => {
   const reqObj = {
     path: "/faqs/add",
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("Token")}`,
+    },
+    postData: data,
+  };
+  return invokeApi(reqObj);
+};
+export const createnewuser = async (data) => {
+  const reqObj = {
+    path: "/admin/register",
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("Token")}`,
+    },
+    postData: data,
+  };
+  return invokeApi(reqObj);
+};
+export const createnewTeamCategory = async (data) => {
+
+  const reqObj = {
+    path: "/teamcategory/add",
     method: "POST",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("Token")}`,
@@ -147,7 +169,7 @@ export const createnewusertype = async (data) => {
 };
 export const createTeamMember = async (data) => {
   const reqObj = {
-    path: "/admin/register",
+    path: "/team/add",
     method: "POST",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("Token")}`,

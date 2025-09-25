@@ -41,6 +41,32 @@ export const deleteAllCategories = async (data) => {
   
   return invokeApi(reqObj);
 };
+export const deleteAllTeam = async (data) => {
+  const reqObj = {
+    path: `/team/delete`,
+    method: "DELETE", // Ensure correct capitalization
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("Token")}`,
+    },
+    postData: data,
+  };
+  
+  return invokeApi(reqObj);
+};
+export const deleteAllTeamCategories = async (data) => {
+  const reqObj = {
+    path: `/teamcategory/delete`,
+    method: "DELETE", // Ensure correct capitalization
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("Token")}`,
+    },
+    postData: data,
+  };
+  
+  return invokeApi(reqObj);
+};
 export const deleteAllTickets = async (data) => {
   const reqObj = {
     path: `/ticket/deletemultiple`,

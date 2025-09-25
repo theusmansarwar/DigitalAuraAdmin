@@ -6,7 +6,6 @@ const Leads = () => {
    
     { id: "name", label: "Name" },
     { id: "subject", label: "Subject" },
-    { id: "budget", label: "Budget" },
     { id: "email", label: "Email" },
 
     { id: "phone", label: "Phone" },

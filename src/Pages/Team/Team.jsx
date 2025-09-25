@@ -1,22 +1,20 @@
 import React from "react";
 import { useTable } from "../../Components/Models/useTable";
 
-const Blogs = () => {
+const Team = () => {
   const attributes = [
-   
-    { id: "thumbnail", label: "Thumbnail" },
-    { id: "title", label: "Blog Title" },
+    { id: "name", label: "Name" },
+    
+   { id: "image", label: "Profile Image" },
+    { id: "role.name", label: "Role" },
     { id: "category.name", label: "Category" },
     { id: "published", label: "Visibility" },
-    { id: "views", label: "Views" },
     { id: "createdAt", label: "Created At" },
   ];
 
- 
-
-  const { tableUI } = useTable({  attributes, tableType: "Blogs" });
+  const { tableUI } = useTable({ attributes, tableType: "Team" });
 
   return <>{tableUI}</>;
 };
 
-export default Blogs;
+export default Team;

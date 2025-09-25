@@ -7,10 +7,13 @@ import {
   Navigate,
 } from "react-router-dom";
 import "./App.css";
-import digitalauralogo from "./Assets/DigitalAuraLogo.png";
+import logo from "./Assets/zemaltlogo.svg";
 
 // Pages
 import AddBlog from "./Pages/Blogs/AddBlog";
+import Team from "./Pages/Team/Team";
+import AddTeam from "./Pages/Team/AddTeam";
+import TeamCategory from "./Pages/TeamCategory/TeamCategory";
 import Blogs from "./Pages/Blogs/Blogs";
 import Categories from "./Pages/Categories/Categories";
 import Comments from "./Pages/Comments/Comments";
@@ -44,6 +47,8 @@ const App = ({ onLogout, message, userType }) => {
     { id: 9, name: "Users", route: "/users" },
     { id: 10, name: "UsersType", route: "/usertype" },
     { id: 12, name: "Services", route: "/services" },
+     { id: 13, name: "Teams", route: "/teams" },
+      { id: 14, name: "Team Categories", route: "/team-categories" },
  
   ];
 
@@ -84,7 +89,7 @@ const App = ({ onLogout, message, userType }) => {
     <div className="App">
       <div className="app-side-bar">
         <img
-          src={digitalauralogo}
+          src={logo}
           className="home-digitalaura-logo"
           alt="digitalaura Logo"
         />
@@ -123,6 +128,10 @@ const App = ({ onLogout, message, userType }) => {
               <Route path="/comments" element={<Comments />} />
               <Route path="/leads" element={<Leads />} />
               <Route path="/applications" element={<Applications />} />
+               <Route path="/team-categories" element={<TeamCategory />} />
+            <Route path="/teams" element={<Team />} />
+            <Route path="/add-team" element={<AddTeam />} />
+            <Route path="/edit-team/:id" element={<AddTeam />} />
               <Route
                 path="/view-application/:id"
                 element={<ViewApplication />}

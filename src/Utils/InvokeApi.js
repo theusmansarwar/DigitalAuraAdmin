@@ -3,7 +3,7 @@ import { baseUrl } from "../Config/Config";
 
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
-console.log(baseUrl , "datasasuaydgskj")
+
 export async function invokeApi({
   path,
   method = "GET",
