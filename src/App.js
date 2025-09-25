@@ -37,7 +37,7 @@ const App = ({ onLogout, message, userType }) => {
   const allItems = [
     { id: 1, name: "Dashboard", route: "/dashboard" },
     { id: 2, name: "Leads", route: "/leads" },
-    { id: 3, name: "Applications", route: "/applications" },
+    // { id: 3, name: "Applications", route: "/applications" },
     { id: 4, name: "Blogs", route: "/blogs" },
     { id: 5, name: "Featured Blogs", route: "/blogs/featured" },
     { id: 6, name: "Categories", route: "/categories" },
@@ -46,7 +46,7 @@ const App = ({ onLogout, message, userType }) => {
     { id: 8, name: "Testimonials", route: "/testimonials" },
     { id: 9, name: "Users", route: "/users" },
     { id: 10, name: "UsersType", route: "/usertype" },
-    { id: 12, name: "Services", route: "/services" },
+    // { id: 12, name: "Services", route: "/services" },
      { id: 13, name: "Teams", route: "/teams" },
       { id: 14, name: "Team Categories", route: "/team-categories" },
  
